@@ -1,17 +1,34 @@
 #include <wb.h>
 
-#define wbCheck(stmt)
-    do {
-        cudaError_t err = stmt;
-        if (err != cudaSuccess) {
-            wbLog(ERROR, "Failed to run stmt ", #stmt);
-            wbLog(ERROR, "Got CUDA error ... ", cudaGetErrorString(err));
-            return -1;
-        }
+#define BLOCK_SIZE 256
+
+#define wbCheck(stmt)                                                       \
+    do {                                                                    \
+        cudaError_t err = stmt;                                             \
+        if (err != cudaSuccess) {                                           \
+            wbLog(ERROR, "Failed to run stmt ", #stmt);                     \
+            wbLog(ERROR, "Got CUDA error ... ", cudaGetErrorString(err));   \
+            return -1;                                                      \
+        }                                                                   \
     } while (0)
     
 //@@ INSERT CODE HERE
+__global__ void colorToGrayShadesKernel(float *in, float *out, int height, int width) {
+
+    int ii = threadIdx.x + (blockDim.x * blockIdx.x);
+    int jj = threadIdx.y + (blockDim.y * blockIdx.y);
+
+    if ((ii < height) && (jj < width)) {
+        int idx =  + (width * jj);
+        float r = in[3 * idx];
+        float g = in[3 * idx + 1];
+        float b = in[3 * idx + 2];
+        out[idx] = (0,21 * r) + (0,71 * g) + (0,07 * b);
+    }
+}
+
 int main(int argc, char *argv[]) {
+
     wbArg_t args;
     int imageChannels;
     int imageWidth;
@@ -23,7 +40,9 @@ int main(int argc, char *argv[]) {
     float *hostOutputImageData;
     float *deviceInputImageData;
     float *deviceOutputImageData;
+
     args = wbArg_read(argc, argv); /* parse the input arguments */
+
     inputImageFile = wbArg_getInputFile(args, 0);
     inputImage = wbImport(inputImageFile);
     imageWidth = wbImage_getWidth(inputImage);
@@ -34,28 +53,35 @@ int main(int argc, char *argv[]) {
     outputImage = wbImage_new(imageWidth, imageHeight, 1);
     hostInputImageData = wbImage_getData(inputImage);
     hostOutputImageData = wbImage_getData(outputImage);
+
     wbTime_start(GPU, "Doing GPU Computation (memory + compute)");
+
     wbTime_start(GPU, "Doing GPU memory allocation");
-    cudaMalloc((void **)&deviceInputImageData,
-    imageWidth * imageHeight * imageChannels * sizeof(float));
-    cudaMalloc((void **)&deviceOutputImageData,
-    imageWidth * imageHeight * sizeof(float));
+    wbCheck(cudaMalloc((void **)&deviceInputImageData,
+            imageWidth * imageHeight * imageChannels * sizeof(float)));
+    wbCheck(cudaMalloc((void **)&deviceOutputImageData,
+            imageWidth * imageHeight * sizeof(float)));
     wbTime_stop(GPU, "Doing GPU memory allocation");
+
     wbTime_start(Copy, "Copying data to the GPU");
-    cudaMemcpy(deviceInputImageData, hostInputImageData,
-    imageWidth * imageHeight * imageChannels * sizeof(float),
-    cudaMemcpyHostToDevice);
+    wbCheck(udaMemcpy((void *)deviceInputImageData, (void *)hostInputImageData,
+            imageWidth * imageHeight * imageChannels * sizeof(float),
+            cudaMemcpyHostToDevice));
     wbTime_stop(Copy, "Copying data to the GPU");
+
     ///////////////////////////////////////////////////////
     wbTime_start(Compute, "Doing the computation on the GPU");
     //@@ INSERT CODE HERE
+
     wbTime_stop(Compute, "Doing the computation on the GPU");
     ///////////////////////////////////////////////////////
+
     wbTime_start(Copy, "Copying data from the GPU");
-    cudaMemcpy(hostOutputImageData, deviceOutputImageData,
-    imageWidth * imageHeight * sizeof(float),
-    cudaMemcpyDeviceToHost);
+    wbCheck(cudaMemcpy((void *)hostOutputImageData, (void *)deviceOutputImageData,
+            imageWidth * imageHeight * sizeof(float),
+            cudaMemcpyDeviceToHost));
     wbTime_stop(Copy, "Copying data from the GPU");
+
     wbTime_stop(GPU, "Doing GPU Computation (memory + compute)");
     
     
@@ -77,8 +103,8 @@ int main(int argc, char *argv[]) {
     (void) fclose(fp);
     
     
-    cudaFree(deviceInputImageData);
-    cudaFree(deviceOutputImageData);
+    wbCheck(cudaFree(deviceInputImageData));
+    wbCheck(cudaFree(deviceOutputImageData));
     wbImage_delete(outputImage);
     wbImage_delete(inputImage);
     return 0;
