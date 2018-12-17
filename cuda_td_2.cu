@@ -89,22 +89,18 @@ int main(int argc, char *argv[]) {
 
     int i, j;
     FILE *fp = fopen("first.ppm", "wb"); /* b - binary mode */
-    (void) fprintf(fp, "P6\n%d %d\n255\n", imageWidth, imageHeight);
+    (void) fprintf(fp, "P5\n%d %d\n255\n", imageWidth, imageHeight);
     for (j = 0; j < imageWidth; ++j)
     {
         for (i = 0; i < imageHeight; ++i)
         {
             static unsigned char color[3];
-            color[0] = hostOutputImageData[i*imageHeight+j];  /* red */
-            color[1] = hostOutputImageData[i*imageHeight+j+1];  /* green */
-            color[2] = hostOutputImageData[i*imageHeight+j+2];  /* blue */
-      
-            (void) fwrite(color, 1, 3, fp);
+            color[0] = hostOutputImageData[i*imageHeight+j];
+            (void) fwrite(color, 1, 1, fp);
         }
     }
     (void) fclose(fp);
-    
-    
+
     wbCheck(cudaFree(deviceInputImageData));
     wbCheck(cudaFree(deviceOutputImageData));
     wbImage_delete(outputImage);
