@@ -13,16 +13,16 @@
     } while (0)
     
 //@@ INSERT CODE HERE
-__global__ void colorToGrayShadesKernel(float *in, float *out, int height, int width) {
+__global__ void colorToGrayShadesKernel(float *in, float *out, int height, int width, int channels) {
 
     int ii = threadIdx.x + (blockDim.x * blockIdx.x);
     int jj = threadIdx.y + (blockDim.y * blockIdx.y);
 
     if ((ii < height) && (jj < width)) {
-        int idx = ii + (width * jj);
-        float r = in[3 * idx];
-        float g = in[3 * idx + 1];
-        float b = in[3 * idx + 2];
+        int idx = (height * ii) + jj;
+        float r = in[channels * idx];
+        float g = in[(channels * idx) + 1];
+        float b = in[(channels * idx) + 2];
         out[idx] = (0.21 * r) + (0.71 * g) + (0.07 * b);
     }
 }
@@ -72,10 +72,11 @@ int main(int argc, char *argv[]) {
     ///////////////////////////////////////////////////////
     wbTime_start(Compute, "Doing the computation on the GPU");
     //@@ INSERT CODE HERE
-    dim3 gridDim(1 + ((imageHeight - 1) / BLOCK_SIDE), 1 + ((imageWidth - 1) / BLOCK_SIDE), 1);
+    dim3 gridDim(1 + (((imageHeight) - 1) / BLOCK_SIDE), 1 + ((imageWidth - 1) / BLOCK_SIDE), 1);
     dim3 blockDim(BLOCK_SIDE, BLOCK_SIDE, 1);
 
-    colorToGrayShadesKernel<<<gridDim, blockDim>>>(deviceInputImageData, deviceOutputImageData, imageHeight, imageWidth);
+    colorToGrayShadesKernel<<<gridDim, blockDim>>>(deviceInputImageData,
+            deviceOutputImageData, imageHeight, imageWidth, imageChannels);
     wbTime_stop(Compute, "Doing the computation on the GPU");
     ///////////////////////////////////////////////////////
 
@@ -95,7 +96,7 @@ int main(int argc, char *argv[]) {
         for (i = 0; i < imageHeight; ++i)
         {
             static unsigned char color[3];
-            color[0] = hostOutputImageData[i*imageHeight+j];
+            color[0] = hostOutputImageData[ (i * imageHeight) + j];
             (void) fwrite(color, 1, 1, fp);
         }
     }
