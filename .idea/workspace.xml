@@ -16,6 +16,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9a6ab27c-c7a6-4142-98bb-521e853014ec" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cuda_td_2.cu" beforeDir="false" afterPath="$PROJECT_DIR$/cuda_td_2.cu" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -40,8 +41,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cuda_td_2.cu">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="21" column="34" lean-forward="true" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
+            <state relative-caret-position="116">
+              <caret line="98" column="72" selection-start-line="98" selection-start-column="72" selection-end-line="98" selection-end-column="72" />
             </state>
           </provider>
         </entry>
@@ -210,7 +211,7 @@
       <workItem from="1543908031920" duration="627000" />
       <workItem from="1543909139513" duration="2173000" />
       <workItem from="1543998068801" duration="9436000" />
-      <workItem from="1545052311917" duration="5293000" />
+      <workItem from="1545052311917" duration="6338000" />
     </task>
     <task id="LOCAL-00001" summary="Allocating device data">
       <created>1543912100772</created>
@@ -223,7 +224,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17529000" />
+    <option name="totallyTimeSpent" value="18574000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-1" width="1366" height="741" extended-state="6" />
@@ -305,8 +306,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cuda_td_2.cu">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="21" column="34" lean-forward="true" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
+        <state relative-caret-position="116">
+          <caret line="98" column="72" selection-start-line="98" selection-start-column="72" selection-end-line="98" selection-end-column="72" />
         </state>
       </provider>
     </entry>

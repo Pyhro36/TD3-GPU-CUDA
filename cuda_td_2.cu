@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
     ///////////////////////////////////////////////////////
     wbTime_start(Compute, "Doing the computation on the GPU");
     //@@ INSERT CODE HERE
-    dim3 gridDim(1 + (((imageHeight) - 1) / BLOCK_SIDE), 1 + ((imageWidth - 1) / BLOCK_SIDE), 1);
+    dim3 gridDim(1 + ((imageHeight - 1) / BLOCK_SIDE), 1 + ((imageWidth - 1) / BLOCK_SIDE), 1);
     dim3 blockDim(BLOCK_SIDE, BLOCK_SIDE, 1);
 
     colorToGrayShadesKernel<<<gridDim, blockDim>>>(deviceInputImageData,
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
         for (i = 0; i < imageHeight; ++i)
         {
             static unsigned char color[3];
-            color[0] = hostOutputImageData[ (i * imageHeight) + j];
+            color[0] = hostOutputImageData[ (i * imageHeight) + j] * 255;
             (void) fwrite(color, 1, 1, fp);
         }
     }
