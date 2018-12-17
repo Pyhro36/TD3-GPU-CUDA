@@ -1,6 +1,6 @@
-#include <wb.h>
+#include "wb.h"
 
-#define BLOCK_SIZE 256
+#define BLOCK_SIDE 16
 
 #define wbCheck(stmt)                                                       \
     do {                                                                    \
@@ -23,7 +23,7 @@ __global__ void colorToGrayShadesKernel(float *in, float *out, int height, int w
         float r = in[3 * idx];
         float g = in[3 * idx + 1];
         float b = in[3 * idx + 2];
-        out[idx] = (0,21 * r) + (0,71 * g) + (0,07 * b);
+        out[idx] = (0.21 * r) + (0.71 * g) + (0.07 * b);
     }
 }
 
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
     wbTime_stop(GPU, "Doing GPU memory allocation");
 
     wbTime_start(Copy, "Copying data to the GPU");
-    wbCheck(udaMemcpy((void *)deviceInputImageData, (void *)hostInputImageData,
+    wbCheck(cudaMemcpy((void *)deviceInputImageData, (void *)hostInputImageData,
             imageWidth * imageHeight * imageChannels * sizeof(float),
             cudaMemcpyHostToDevice));
     wbTime_stop(Copy, "Copying data to the GPU");
@@ -72,7 +72,10 @@ int main(int argc, char *argv[]) {
     ///////////////////////////////////////////////////////
     wbTime_start(Compute, "Doing the computation on the GPU");
     //@@ INSERT CODE HERE
+    dim3 gridDim(1 + ((imageHeight - 1) / BLOCK_SIDE), 1 + ((imageWidth - 1) / BLOCK_SIDE), 1);
+    dim3 blockDim(BLOCK_SIDE, BLOCK_SIDE, 1);
 
+    colorToGrayShadesKernel<<<gridDim, blockDim>>>(deviceInputImageData, deviceOutputImageData, imageHeight, imageWidth);
     wbTime_stop(Compute, "Doing the computation on the GPU");
     ///////////////////////////////////////////////////////
 
@@ -83,8 +86,7 @@ int main(int argc, char *argv[]) {
     wbTime_stop(Copy, "Copying data from the GPU");
 
     wbTime_stop(GPU, "Doing GPU Computation (memory + compute)");
-    
-    
+
     int i, j;
     FILE *fp = fopen("first.ppm", "wb"); /* b - binary mode */
     (void) fprintf(fp, "P6\n%d %d\n255\n", imageWidth, imageHeight);
