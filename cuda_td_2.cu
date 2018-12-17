@@ -19,7 +19,7 @@ __global__ void colorToGrayShadesKernel(float *in, float *out, int height, int w
     int jj = threadIdx.y + (blockDim.y * blockIdx.y);
 
     if ((ii < height) && (jj < width)) {
-        int idx =  + (width * jj);
+        int idx = ii + (width * jj);
         float r = in[3 * idx];
         float g = in[3 * idx + 1];
         float b = in[3 * idx + 2];
