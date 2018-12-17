@@ -15,9 +15,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9a6ab27c-c7a6-4142-98bb-521e853014ec" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/cuda_td_2.cu" beforeDir="false" afterPath="$PROJECT_DIR$/cuda_td_2.cu" afterDir="false" />
-    </list>
+    <list default="true" id="9a6ab27c-c7a6-4142-98bb-521e853014ec" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -215,7 +213,7 @@
       <workItem from="1543908031920" duration="627000" />
       <workItem from="1543909139513" duration="2173000" />
       <workItem from="1543998068801" duration="9436000" />
-      <workItem from="1545052311917" duration="1794000" />
+      <workItem from="1545052311917" duration="2213000" />
     </task>
     <task id="LOCAL-00001" summary="Allocating device data">
       <created>1543912100772</created>
@@ -228,10 +226,10 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14030000" />
+    <option name="totallyTimeSpent" value="14449000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="-1" width="1366" height="741" extended-state="6" />
+    <frame x="0" y="-1" width="1366" height="741" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26136363" />
