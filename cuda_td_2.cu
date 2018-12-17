@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
         for (i = 0; i < imageHeight; ++i)
         {
             static unsigned char color[3];
-            color[0] = (unsigned char)hostOutputImageData[(i * imageHeight) + j] * 255;
+            color[0] = hostOutputImageData[(i * imageHeight) + j] * 255f;
             (void) fwrite(color, 1, 1, fp);
         }
     }
