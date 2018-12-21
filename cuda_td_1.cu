@@ -11,7 +11,7 @@ __global__ void vecAdd(float *in1, float *in2, float *out, int len) {
 }
 
 int main(int argc, char **argv) {
-
+    
     wbArg_t args;
     int inputLength;
     size_t inputSize;
