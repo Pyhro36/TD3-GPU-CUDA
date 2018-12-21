@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(TD3_GPU_CUDA LANGUAGES CUDA C)
 
-set(CMAKE_C_STANDARD 14)
+set(CMAKE_C_STANDARD 11)
 
 include_directories(.)
 

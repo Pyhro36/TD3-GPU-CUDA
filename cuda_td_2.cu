@@ -19,7 +19,7 @@ __global__ void colorToGrayShadesKernel(float *in, float *out, int height, int w
     int jj = threadIdx.y + (blockDim.y * blockIdx.y);
 
     if ((ii < height) && (jj < width)) {
-        int idx = (height * ii) + jj;
+        int idx = (ii * height) + jj;
         float r = in[channels * idx];
         float g = in[(channels * idx) + 1];
         float b = in[(channels * idx) + 2];
@@ -95,8 +95,8 @@ int main(int argc, char *argv[]) {
     {
         for (i = 0; i < imageHeight; ++i)
         {
-            static unsigned char color[3];
-            color[0] = hostOutputImageData[ (i * imageHeight) + j] * 255;
+            static unsigned char color[1];
+            color[0] = hostOutputImageData[(i * imageHeight) + j] * 255.0;
             (void) fwrite(color, 1, 1, fp);
         }
     }
