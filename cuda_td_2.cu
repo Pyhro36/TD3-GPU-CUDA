@@ -1,6 +1,6 @@
 #include "wb.h"
 
-#define BLOCK_SIDE 16
+
 
 #define wbCheck(stmt)                                                       \
     do {                                                                    \
@@ -13,6 +13,8 @@
     } while (0)
     
 //@@ INSERT CODE HERE
+#define BLOCK_SIDE 16
+
 __global__ void colorToGrayShadesKernel(float *in, float *out, int height, int width, int channels) {
 
     int ii = threadIdx.x + (blockDim.x * blockIdx.x);
@@ -97,7 +99,7 @@ int main(int argc, char *argv[]) {
         for (i = 0; i < imageHeight; ++i)
         {
             static unsigned char color[1];
-            color[0] = (unsigned char)(hostOutputImageData[i + (j * imageHeight)] * 255.0);
+            color[0] = (unsigned char)(hostOutputImageData[i + (j * imageHeight)] * 255.0f);
             (void) fwrite(color, 1, 1, fp);
         }
     }
