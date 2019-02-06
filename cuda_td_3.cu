@@ -40,10 +40,10 @@ int main(int argc, char *argv[]) {
 
     wbTime_start(GPU, "Doing GPU Computation (memory + compute)");
     wbTime_start(GPU, "Doing GPU memory allocation");
-    cudaMalloc((void **)&deviceInputImageData,
-            imageWidth * imageHeight * imageChannels * sizeof(float));
-    cudaMalloc((void **)&deviceOutputImageData,
-            imageWidth * imageHeight * imageChannels * sizeof(float));
+    wbCheck(cudaMalloc((void **)&deviceInputImageData,
+            imageWidth * imageHeight * imageChannels * sizeof(float)));
+    wbCheck(cudaMalloc((void **)&deviceOutputImageData,
+            imageWidth * imageHeight * imageChannels * sizeof(float)));
     wbTime_stop(GPU, "Doing GPU memory allocation");
     wbTime_start(Copy, "Copying data to the GPU");
     cudaMemcpy(deviceInputImageData, hostInputImageData,
@@ -70,15 +70,16 @@ int main(int argc, char *argv[]) {
         for (i = 0; i < imageHeight; ++i)
         {
             static unsigned char color[3];
-            color[0] = hostOutputImageData[i*imageHeight+j];  /* red */
-            color[1] = hostOutputImageData[i*imageHeight+j+1];  /* green */
-            color[2] = hostOutputImageData[i*imageHeight+j+2];  /* blue */
+            color[0] = hostOutputImageData[i + (j * imageHeight)];  /* red */
+            color[1] = hostOutputImageData[i + (j * imageHeight) + 1];  /* green */
+            color[2] = hostOutputImageData[i + (j *imageHeight) + 2];  /* blue */
       
             (void) fwrite(color, 1, 3, fp);
         }
     }
     (void) fclose(fp);
-    
+
+    wbTime_start(GPU, "Doing GPU memory freeing");
     cudaFree(deviceInputImageData);
     cudaFree(deviceOutputImageData);
     wbImage_delete(outputImage);

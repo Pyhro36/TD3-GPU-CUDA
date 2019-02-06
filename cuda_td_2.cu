@@ -19,11 +19,12 @@ __global__ void colorToGrayShadesKernel(float *in, float *out, int height, int w
     int jj = threadIdx.y + (blockDim.y * blockIdx.y);
 
     if ((ii < height) && (jj < width)) {
-        int idx = (ii * height) + jj;
-        float r = in[channels * idx];
-        float g = in[(channels * idx) + 1];
-        float b = in[(channels * idx) + 2];
-        out[idx] = (0.21 * r) + (0.71 * g) + (0.07 * b);
+        int grayIdx = ii + (jj * height);
+        int rgbIdx = channels * grayIdx;
+        float r = in[rgbIdx];
+        float g = in[rgbIdx + 1];
+        float b = in[rgbIdx + 2];
+        out[grayIdx] = (0.21 * r) + (0.71 * g) + (0.07 * b);
     }
 }
 
@@ -96,15 +97,19 @@ int main(int argc, char *argv[]) {
         for (i = 0; i < imageHeight; ++i)
         {
             static unsigned char color[1];
-            color[0] = hostOutputImageData[(i * imageHeight) + j] * 255.0;
+            color[0] = (unsigned char)(hostOutputImageData[i + (j * imageHeight)] * 255.0);
             (void) fwrite(color, 1, 1, fp);
         }
     }
     (void) fclose(fp);
 
+    wbTime_start(GPU, "Doing GPU memory freeing");
     wbCheck(cudaFree(deviceInputImageData));
     wbCheck(cudaFree(deviceOutputImageData));
+    wbTime_stop(GPU, "Doing GPU memory freeing");
+
     wbImage_delete(outputImage);
     wbImage_delete(inputImage);
+
     return 0;
 }
