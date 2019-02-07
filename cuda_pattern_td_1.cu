@@ -2,6 +2,8 @@
 
 #define NUM_BINS 4096
 
+#define BLOCK_DIM 64
+
 #define CUDA_CHECK(ans) { gpuAssert((ans), __FILE__, __LINE__); }
 
 inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort = true) {
@@ -15,30 +17,36 @@ inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort =
 
 __global__ void histoKernel(unsigned int *input, unsigned int *bins, int inputLength) {
 
-//    __shared__ unsigned int privateBins[NUM_BINS];
+    __shared__ unsigned int privateBins[NUM_BINS];
 
+    int privateI;
     int i = threadIdx.x + (blockIdx.x * blockDim.x);
 
-//    if (i < NUM_BINS)
-//    {
-        bins[i] = 5;
-//    }
+    if (i < NUM_BINS)
+    {
+        bins[i] = 0;
+    }
 
-//    privateBins[threadIdx.x] = 0;
-//
-//    if (i < inputLength)
-//    {
-//        __syncthreads();
-//
-//        atomicAdd(&(privateBins[input[i]]), 1);
-//    }
+    // repartition de l'initialisation du bin prive entre les threads du bloc par partitionnement entrelace
+    for (privateI = threadIdx.x; privateI < NUM_BINS; privateI += blockDim.x)
+    {
+        privateBins[privateI] = 0;
+    }
 
-//    __syncthreads();
-//
-//    if (i < inputLength)
-//    {
-//        atomicAdd(&(bins[input[i]]), 1);
-//    }
+    if (i < inputLength)
+    {
+        __syncthreads();
+
+        atomicAdd(&(privateBins[input[i]]), 1);
+    }
+
+    __syncthreads();
+
+    // repartition de la reduction du bin prive entre les threads du bloc par partitionnement entrelace
+    for (privateI = threadIdx.x; privateI < NUM_BINS; privateI += blockDim.x)
+    {
+        atomicAdd(&(bins[privateI]), privateBins[privateI]);
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -77,9 +85,10 @@ int main(int argc, char *argv[]) {
     wbLog(TRACE, "Launching kernel");
     wbTime_start(Compute, "Performing CUDA computation");
     //@@ Perform kernel computation here
-    int gridDim = 1 + ((inputLength - 1) / NUM_BINS);
+    int gridDim = 1 + ((inputLength - 1) / BLOCK_DIM);
     // On prend des blocs dans lesquels rentrent juste les operations de reduction globale
-    histoKernel<<<gridDim,NUM_BINS>>>(deviceInput, deviceBins, inputLength);
+    histoKernel<<<gridDim,BLOCK_DIM>>>(deviceInput, deviceBins, inputLength);
+    cudaDeviceSynchronize();
     wbTime_stop(Compute, "Performing CUDA computation");
 
     wbTime_start(Copy, "Copying output memory to the CPU");
