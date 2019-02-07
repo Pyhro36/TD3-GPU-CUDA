@@ -17,6 +17,7 @@
 
 __global__ void blurringKernel(float *in, float *out, int height, int width, int channels) {
 
+    int blurRow, blurCol, curRow, curCol;
     int row = threadIdx.x + (blockDim.x * blockIdx.x);
     int col = threadIdx.y + (blockDim.y * blockIdx.y);
     int channel = threadIdx.z + (blockDim.z * blockIdx.z);
@@ -26,12 +27,12 @@ __global__ void blurringKernel(float *in, float *out, int height, int width, int
         float pixVal = 0.0;
         int blurPixelCount = 0;
 
-        for (int blurRow = -BLUR_SIZE; blurRow < BLUR_SIZE - 1; ++blurRow)
+        for (blurRow = -BLUR_SIZE; blurRow < (BLUR_SIZE - 1); ++blurRow)
         {
-            for (int blurCol = -BLUR_SIZE; blurCol < BLUR_SIZE - 1; ++blurCol)
+            for (blurCol = -BLUR_SIZE; blurCol < (BLUR_SIZE - 1); ++blurCol)
             {
-                int curRow = row + blurRow;
-                int curCol = col + blurCol;
+                curRow = row + blurRow;
+                curCol = col + blurCol;
 
                 if ((curRow > -1) && (curRow < height) && (curCol > -1) && (curCol < width))
                 {
