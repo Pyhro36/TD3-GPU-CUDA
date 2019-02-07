@@ -1,6 +1,7 @@
 #include "wb.h"
 
 #define NUM_BINS 4096
+
 #define CUDA_CHECK(ans) { gpuAssert((ans), __FILE__, __LINE__); }
 
 inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort = true) {
@@ -13,6 +14,31 @@ inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort =
 }
 
 __global__ void histoKernel(unsigned int *input, unsigned int *bins, int inputLength) {
+
+//    __shared__ unsigned int privateBins[NUM_BINS];
+
+    int i = threadIdx.x + (blockIdx.x * blockDim.x);
+
+//    if (i < NUM_BINS)
+//    {
+        bins[i] = 5;
+//    }
+
+//    privateBins[threadIdx.x] = 0;
+//
+//    if (i < inputLength)
+//    {
+//        __syncthreads();
+//
+//        atomicAdd(&(privateBins[input[i]]), 1);
+//    }
+
+//    __syncthreads();
+//
+//    if (i < inputLength)
+//    {
+//        atomicAdd(&(bins[input[i]]), 1);
+//    }
 }
 
 int main(int argc, char *argv[]) {
@@ -33,16 +59,17 @@ int main(int argc, char *argv[]) {
 
     wbLog(TRACE, "The input length is ", inputLength);
     wbLog(TRACE, "The number of bins is ", NUM_BINS);
+
     wbTime_start(GPU, "Allocating GPU memory.");
     //@@ Allocate GPU memory here
-    CUDA_CHECK(cudaMalloc(&deviceInput, inputLength));
+    CUDA_CHECK(cudaMalloc(&deviceInput, inputLength * sizeof(unsigned int)));
     CUDA_CHECK(cudaMalloc(&deviceBins, NUM_BINS * sizeof(unsigned int)));
     CUDA_CHECK(cudaDeviceSynchronize());
     wbTime_stop(GPU, "Allocating GPU memory.");
+
     wbTime_start(GPU, "Copying input memory to the GPU.");
     //@@ Copy memory to the GPU here
-
-    CUDA_CHECK(cudaMemcpy(deviceInput, hostInput, inputLength, cudaMemcpyHostToDevice));
+    CUDA_CHECK(cudaMemcpy(deviceInput, hostInput, inputLength * sizeof(unsigned int), cudaMemcpyHostToDevice));
     CUDA_CHECK(cudaDeviceSynchronize());
     wbTime_stop(GPU, "Copying input memory to the GPU.");
     // Launch kernel
@@ -50,18 +77,25 @@ int main(int argc, char *argv[]) {
     wbLog(TRACE, "Launching kernel");
     wbTime_start(Compute, "Performing CUDA computation");
     //@@ Perform kernel computation here
+    int gridDim = 1 + ((inputLength - 1) / NUM_BINS);
+    // On prend des blocs dans lesquels rentrent juste les operations de reduction globale
+    histoKernel<<<gridDim,NUM_BINS>>>(deviceInput, deviceBins, inputLength);
     wbTime_stop(Compute, "Performing CUDA computation");
-    wbTime_start(Copy, "Copying output memory to the CPU");
 
+    wbTime_start(Copy, "Copying output memory to the CPU");
     //@@ Copy the GPU memory back to the CPU here
+    CUDA_CHECK(cudaMemcpy(hostBins, deviceBins, NUM_BINS * sizeof(unsigned int), cudaMemcpyDeviceToHost))
     CUDA_CHECK(cudaDeviceSynchronize());
     wbTime_stop(Copy, "Copying output memory to the CPU");
+
     wbTime_start(GPU, "Freeing GPU Memory");
     //@@ Free the GPU memory here
     CUDA_CHECK(cudaFree(deviceBins));
     CUDA_CHECK(cudaFree(deviceInput));
     wbTime_stop(GPU, "Freeing GPU Memory");
- 
+
+    wbSolution(args, hostBins, NUM_BINS);
+
     free(hostBins);
     free(hostInput);
     return 0;
