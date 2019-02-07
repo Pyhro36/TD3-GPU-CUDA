@@ -26,14 +26,14 @@ __global__ void blurringKernel(float *in, float *out, int height, int width, int
         float pixVal = 0.0;
         int blurPixelCount = 0;
 
-        for (int blurRow = -BLUR_SIZE; blurRow <= BLUR_SIZE; ++blurRow)
+        for (int blurRow = -BLUR_SIZE; blurRow < BLUR_SIZE - 1; ++blurRow)
         {
-            for (int blurCol = -BLUR_SIZE; blurCol <= BLUR_SIZE; ++blurCol)
+            for (int blurCol = -BLUR_SIZE; blurCol < BLUR_SIZE - 1; ++blurCol)
             {
                 int curRow = row + blurRow;
                 int curCol = col + blurCol;
 
-                if ((curRow >= 0) && (curRow < height) && (curCol >= 0) && (curCol < width))
+                if ((curRow > -1) && (curRow < height) && (curCol > -1) && (curCol < width))
                 {
                     pixVal += in[(((curCol * height) + curRow) * channels) + channel];
                     blurPixelCount++;
