@@ -10,7 +10,7 @@
     } \
 } while (0)
 
-#define BLUR_SIZE 0
+#define BLUR_SIZE 1
 
 //@@ INSERT CODE HERE
 #define BLOCK_SIDE 16
