@@ -19,7 +19,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9a6ab27c-c7a6-4142-98bb-521e853014ec" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cuda_pattern_td_1.cu" beforeDir="false" afterPath="$PROJECT_DIR$/cuda_pattern_td_1.cu" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -56,8 +56,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cuda_pattern_td_1.cu">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="218">
-              <caret line="23" column="20" lean-forward="true" selection-start-line="23" selection-start-column="20" selection-end-line="23" selection-end-column="20" />
+            <state relative-caret-position="315">
+              <caret line="36" column="5" lean-forward="true" selection-start-line="36" selection-end-line="37" />
             </state>
           </provider>
         </entry>
@@ -173,6 +173,11 @@
               <item name="TD3_GPU_CUDA" type="b2602c69:ProjectViewProjectNode" />
               <item name="TD3-GPU-CUDA" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="TD3_GPU_CUDA" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TD3-GPU-CUDA" type="462c0819:PsiDirectoryNode" />
+              <item name="dataset_td_pattern_1" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -279,7 +284,7 @@
       <workItem from="1545052311917" duration="6338000" />
       <workItem from="1545063200352" duration="3703000" />
       <workItem from="1545080648674" duration="1483000" />
-      <workItem from="1549563299359" duration="11572000" />
+      <workItem from="1549563299359" duration="14573000" />
     </task>
     <task id="LOCAL-00001" summary="Allocating device data">
       <created>1543912100772</created>
@@ -337,11 +342,32 @@
       <option name="project" value="LOCAL" />
       <updated>1549567930313</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="TD4-CUDA a tester">
+      <created>1549576912089</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1549576912089</updated>
+    </task>
+    <task id="LOCAL-00010" summary="dataset">
+      <created>1549577068326</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1549577068326</updated>
+    </task>
+    <task id="LOCAL-00011" summary="TD4 Question 1.1 ok">
+      <created>1549578612477</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1549578612477</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="52271000" />
+    <option name="totallyTimeSpent" value="55272000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1279" y="94" width="1922" height="1053" extended-state="6" />
@@ -381,7 +407,10 @@
     <MESSAGE value="a terminer" />
     <MESSAGE value="images" />
     <MESSAGE value="Question 4.1 ok, question 3.1 a revoir" />
-    <option name="LAST_COMMIT_MESSAGE" value="Question 4.1 ok, question 3.1 a revoir" />
+    <MESSAGE value="TD4-CUDA a tester" />
+    <MESSAGE value="dataset" />
+    <MESSAGE value="TD4 Question 1.1 ok" />
+    <option name="LAST_COMMIT_MESSAGE" value="TD4 Question 1.1 ok" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/dataset/images/input.ppm">
@@ -468,8 +497,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cuda_pattern_td_1.cu">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="23" column="20" lean-forward="true" selection-start-line="23" selection-start-column="20" selection-end-line="23" selection-end-column="20" />
+        <state relative-caret-position="315">
+          <caret line="36" column="5" lean-forward="true" selection-start-line="36" selection-end-line="37" />
         </state>
       </provider>
     </entry>

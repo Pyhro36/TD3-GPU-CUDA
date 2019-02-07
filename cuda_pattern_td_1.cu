@@ -36,7 +36,6 @@ __global__ void histoKernel(unsigned int *input, unsigned int *bins, int inputLe
     if (i < inputLength)
     {
         __syncthreads();
-
         atomicAdd(&(privateBins[input[i]]), 1);
     }
 
