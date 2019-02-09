@@ -43,7 +43,7 @@ __global__ void matrixMultiplyShared(float *A, float *B, float *C,
             }
             else
             {
-                privateA[(tx * BLOCK_SIDE) + ty] = 0.0;
+                privateA[(tx * BLOCK_SIDE) + ty] = 0.0f;
             }
 
             if (((tile * BLOCK_SIDE) + ty) < numBRows)
@@ -52,7 +52,7 @@ __global__ void matrixMultiplyShared(float *A, float *B, float *C,
             }
             else
             {
-                privateB[(tx * BLOCK_SIDE) + ty] = 0.0;
+                privateB[(tx * BLOCK_SIDE) + ty] = 0.0f;
             }
 
             __syncthreads();

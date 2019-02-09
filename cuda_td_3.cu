@@ -27,9 +27,9 @@ __global__ void blurringKernel(float *in, float *out, int height, int width, int
         float pixVal = 0.0;
         int blurPixelCount = 0;
 
-        for (blurRow = -BLUR_SIZE; blurRow < (BLUR_SIZE - 1); ++blurRow)
+        for (blurRow = (-2); blurRow < 2; ++blurRow)
         {
-            for (blurCol = -BLUR_SIZE; blurCol < (BLUR_SIZE - 1); ++blurCol)
+            for (blurCol = (-2); blurCol < 2; ++blurCol)
             {
                 curRow = row + blurRow;
                 curCol = col + blurCol;
@@ -82,6 +82,7 @@ int main(int argc, char *argv[]) {
             imageWidth * imageHeight * imageChannels * sizeof(float),
     cudaMemcpyHostToDevice));
     wbTime_stop(Copy, "Copying data to the GPU");
+
     ///////////////////////////////////////////////////////
     wbTime_start(Compute, "Doing the computation on the GPU");
     dim3 gridDim(1 + ((imageHeight - 1) / BLOCK_SIDE), 1 + ((imageWidth - 1) / BLOCK_SIDE), imageChannels);
