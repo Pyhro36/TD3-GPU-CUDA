@@ -13,7 +13,7 @@
     } while (0)
     
 //@@ INSERT CODE HERE
-#define BLOCK_SIZE 16
+#define BLOCK_SIDE 16
 
 __global__ void colorToGrayShadesKernel(float *in, float *out, int height, int width, int channels) {
 
@@ -75,8 +75,8 @@ int main(int argc, char *argv[]) {
     ///////////////////////////////////////////////////////
     wbTime_start(Compute, "Doing the computation on the GPU");
     //@@ INSERT CODE HERE
-    dim3 gridDim(1 + ((imageHeight - 1) / BLOCK_SIZE), 1 + ((imageWidth - 1) / BLOCK_SIZE), 1);
-    dim3 blockDim(BLOCK_SIZE, BLOCK_SIZE, 1);
+    dim3 gridDim(1 + ((imageHeight - 1) / BLOCK_SIDE), 1 + ((imageWidth - 1) / BLOCK_SIDE), 1);
+    dim3 blockDim(BLOCK_SIDE, BLOCK_SIDE, 1);
 
     colorToGrayShadesKernel<<<gridDim, blockDim>>>(deviceInputImageData,
             deviceOutputImageData, imageHeight, imageWidth, imageChannels);

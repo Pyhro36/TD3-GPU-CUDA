@@ -13,7 +13,7 @@
 #define BLUR_SIZE 2
 
 //@@ INSERT CODE HERE
-#define BLOCK_SIZE 16
+#define BLOCK_SIDE 16
 
 __global__ void blurringKernel(float *in, float *out, int height, int width, int channels) {
 
@@ -84,8 +84,8 @@ int main(int argc, char *argv[]) {
     wbTime_stop(Copy, "Copying data to the GPU");
     ///////////////////////////////////////////////////////
     wbTime_start(Compute, "Doing the computation on the GPU");
-    dim3 gridDim(1 + ((imageHeight - 1) / BLOCK_SIZE), 1 + ((imageWidth - 1) / BLOCK_SIZE), imageChannels);
-    dim3 blockDim(BLOCK_SIZE, BLOCK_SIZE, 1); // le but est d'avoir toujours des blocks de 16 * 16
+    dim3 gridDim(1 + ((imageHeight - 1) / BLOCK_SIDE), 1 + ((imageWidth - 1) / BLOCK_SIDE), imageChannels);
+    dim3 blockDim(BLOCK_SIDE, BLOCK_SIDE, 1); // le but est d'avoir toujours des blocks de 16 * 16
     blurringKernel<<<gridDim, blockDim>>>(deviceInputImageData,
             deviceOutputImageData, imageHeight, imageWidth, imageChannels);
     cudaDeviceSynchronize();

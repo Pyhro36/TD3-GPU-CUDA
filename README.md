@@ -18,5 +18,13 @@ Le fichier `cuda_td_4.cu` contient le code pour la Question 4.1, la fonction de 
                                 int numBColumns, int numCRows,
                                 int numCColumns)`.
 
+Le fichier `cuda_td_4.cu` contient le code pour la Question 5.1, la fonction de noyau cuda est
+`matrixMultiplyShared(float *A, float *B, float *C, int numARows,
+                                int numAColumns, int numBRows,
+                                int numBColumns, int numCRows,
+                                int numCColumns)`.
+
 # TD4-GPU-CUDA
 
+Le fichier `cuda_pattern_td_1.cu` contient le code pour la Question 1.1, la fonction de noyau cuda est
+`histoKernel(unsigned int *input, unsigned int *bins, int inputLength)`.

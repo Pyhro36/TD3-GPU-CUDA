@@ -1,7 +1,7 @@
 // Given a list (lst) of length n
 // Output its sum = lst[0] + lst[1] + ... + lst[n-1];
 #include "wb.h"
-#define BLOCK_SIZE 512 //@@ You can change this
+#define BLOCK_SIDE 512 //@@ You can change this
 
 
 #define wbCheck(stmt) \
@@ -34,9 +34,9 @@ int main(int argc, char **argv) {
     args = wbArg_read(argc, argv);
     wbTime_start(Generic, "Importing data and creating memory on host");
     hostInput = (float *)wbImport(wbArg_getInputFile(args, 0), &numInputElements);
-    numOutputElements = numInputElements / (BLOCK_SIZE << 1);
+    numOutputElements = numInputElements / (BLOCK_SIDE << 1);
     
-    if (numInputElements % (BLOCK_SIZE << 1)) {
+    if (numInputElements % (BLOCK_SIDE << 1)) {
         numOutputElements++;
     }
     

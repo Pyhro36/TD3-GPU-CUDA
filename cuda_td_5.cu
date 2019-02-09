@@ -1,4 +1,5 @@
 #include "wb.h"
+
 #define wbCheck(stmt) \
 do { \
     cudaError_t err = stmt; \
@@ -9,7 +10,7 @@ do { \
     } \
 } while (0)
 
-#define BLOCK_SIZE 64
+#define BLOCK_SIDE 16
 
 // Compute C = A * B
 __global__ void matrixMultiplyShared(float *A, float *B, float *C,
@@ -19,30 +20,52 @@ __global__ void matrixMultiplyShared(float *A, float *B, float *C,
 {
     //@@ Insert code to implement matrix multiplication here
     //@@ You have to use shared memory for this lab
-    __shared__ float privateSum;
+    __shared__ float privateA[BLOCK_SIDE * BLOCK_SIDE];
+    __shared__ float privateB[BLOCK_SIDE * BLOCK_SIDE];
 
-    int colARowB = threadIdx.x + (blockDim.x * blockIdx.x);
-    int rowC = threadIdx.y + (blockDim.y * blockIdx.y);
-    int colC = threadIdx.z + (blockDim.z * blockIdx.z);
+    float cValue;
+    int tile, i;
+
+    int tx = threadIdx.x;
+    int ty = threadIdx.y;
+    int rowC = tx + (blockDim.x * blockIdx.x);
+    int colC = ty + (blockDim.y * blockIdx.y);
 
     if ((rowC < numCRows) && (colC < numCColumns))
     {
-        // initialisation de la somme privee et de C
-        if (threadIdx.x == 0)
+        cValue = 0;
+
+        for (tile = 0; tile < (1 + ((numAColumns - 1) / BLOCK_SIDE)); ++tile)
         {
-            C[(rowC * numCColumns) + colC] = 0;
-            privateSum = 0;
+            if (((tile * BLOCK_SIDE) + tx) < numAColumns)
+            {
+                privateA[(tx * BLOCK_SIDE) + ty] = A[(rowC * numAColumns) + (tile * BLOCK_SIDE) + ty];
+            }
+            else
+            {
+                privateA[(tx * BLOCK_SIDE) + ty] = 0.0;
+            }
+
+            if (((tile * BLOCK_SIDE) + ty) < numBRows)
+            {
+                privateB[(tx * BLOCK_SIDE) + ty] = B[(((tile * BLOCK_SIDE) + tx) * numBColumns) + colC];
+            }
+            else
+            {
+                privateB[(tx * BLOCK_SIDE) + ty] = 0.0;
+            }
+
+            __syncthreads();
+
+            for (i = 0; i < BLOCK_SIDE; ++i)
+            {
+                cValue += privateA[(tx * BLOCK_SIDE) + i] * privateB[(i * BLOCK_SIDE) + ty];
+            }
+
+            __syncthreads();
         }
 
-        __syncthreads();
-        atomicAdd(&privateSum, A[(rowC * numAColumns) + colARowB] * B[(colARowB * numBColumns) + colC]);
-        __syncthreads();
-
-        // reduction de la somme privee
-        if (threadIdx.x == 0)
-        {
-            atomicAdd(&(C[(rowC * numCColumns) + colC]), privateSum);
-        }
+        C[(rowC * numCColumns) + colC] = cValue;
     }
 }
 
@@ -91,9 +114,8 @@ int main(int argc, char **argv) {
     wbTime_stop(GPU, "Copying input memory to the GPU.");
 
     //@@ Initialize the grid and block dimensions here
-    dim3 gridDim(1 + ((numAColumns - 1) / BLOCK_SIZE), numCRows,  numCColumns);
-    // on garde toujours des blocks de 16 * 16, dans un bloc on parallelise une somme d'une case de C
-    int blockDim = BLOCK_SIZE;
+    dim3 gridDim(1 + ((numCRows - 1) / BLOCK_SIDE), 1 + ((numCColumns - 1) / BLOCK_SIDE), 1);
+    dim3 blockDim(BLOCK_SIDE, BLOCK_SIDE, 1);
 
     wbTime_start(Compute, "Performing CUDA computation");
     //@@ Launch the GPU Kernel here
