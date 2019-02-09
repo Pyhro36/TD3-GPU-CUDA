@@ -18,11 +18,18 @@ Le fichier `cuda_td_4.cu` contient le code pour la Question 4.1, la fonction de 
                                 int numBColumns, int numCRows,
                                 int numCColumns)`.
 
-Le fichier `cuda_td_4.cu` contient le code pour la Question 5.1, la fonction de noyau cuda est
-`matrixMultiplyShared(float *A, float *B, float *C, int numARows,
-                                int numAColumns, int numBRows,
-                                int numBColumns, int numCRows,
-                                int numCColumns)`.
+Le fichier `cuda_td_5.cu` contient le code pour la Question 5.1, la fonction de noyau cuda est
+`matrixMultiplyShared(float *A, float *B, float *C,
+                                      int numARows, int numAColumns,
+                                      int numBRows, int numBColumns,
+                                      int numCRows, int numCColumns)`.
+                                
+Le fichier `cuda_td_5.cu` contient une proposition de multiplication de matrice parallelisée avec des memoires partagées
+a la mode des sacs de mots, mais elle est moins performante que `cuda_td_4.cu`. Sa fonction de noyau cuda est
+`matrixMultiplyShared(float *A, float *B, float *C,
+                                      int numARows, int numAColumns,
+                                      int numBRows, int numBColumns,
+                                      int numCRows, int numCColumns)`.
 
 # TD4-GPU-CUDA
 
