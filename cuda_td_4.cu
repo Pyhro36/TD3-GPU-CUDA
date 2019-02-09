@@ -10,7 +10,7 @@ do {    \
     }   \
 } while (0)
 
-#define BLOCK_SIDE 16
+#define BLOCK_SIZE 16
 
 // Compute C = A * B
 __global__ void matrixMultiply(float *A, float *B, float *C, int numARows,
@@ -25,9 +25,11 @@ __global__ void matrixMultiply(float *A, float *B, float *C, int numARows,
 
     if ((rowC < numCRows) && (colC < numCColumns))
     {
+        C[(rowC * numCColumns) + colC] = 0;
+
         for (colA = 0; colA < numAColumns; ++colA)
         {
-            C[(rowC * numCColumns) + (colC)] += A[(rowC * numAColumns) + (colA)] * B[(colA * numBColumns) + (colC)];
+            C[(rowC * numCColumns) + colC] += A[(rowC * numAColumns) + colA] * B[(colA * numBColumns) + colC];
         }
     }
 }
@@ -77,8 +79,8 @@ int main(int argc, char **argv) {
     wbTime_stop(GPU, "Copying input memory to the GPU.");
 
     //@@ Initialize the grid and block dimensions here
-    dim3 gridDim(1 + ((numCRows - 1) / BLOCK_SIDE), 1 + ((numCColumns - 1) / BLOCK_SIDE), 1);
-    dim3 blockDim(BLOCK_SIDE, BLOCK_SIDE, 1);
+    dim3 gridDim(1 + ((numCRows - 1) / BLOCK_SIZE), 1 + ((numCColumns - 1) / BLOCK_SIZE), 1);
+    dim3 blockDim(BLOCK_SIZE, BLOCK_SIZE, 1);
 
     wbTime_start(Compute, "Performing CUDA computation");
     //@@ Launch the GPU Kernel here
