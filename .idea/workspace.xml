@@ -21,11 +21,6 @@
     <list default="true" id="9a6ab27c-c7a6-4142-98bb-521e853014ec" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cuda_pattern_td_3.cu" beforeDir="false" afterPath="$PROJECT_DIR$/cuda_pattern_td_3.cu" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cuda_td_2.cu" beforeDir="false" afterPath="$PROJECT_DIR$/cuda_td_2.cu" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cuda_td_3.cu" beforeDir="false" afterPath="$PROJECT_DIR$/cuda_td_3.cu" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cuda_td_4.cu" beforeDir="false" afterPath="$PROJECT_DIR$/cuda_td_4.cu" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cuda_td_5.cu" beforeDir="false" afterPath="$PROJECT_DIR$/cuda_td_5.cu" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -46,12 +41,12 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="435">
-                <caret line="29" column="46" selection-start-line="29" selection-start-column="46" selection-end-line="29" selection-end-column="46" />
+              <first_editor relative-caret-position="404">
+                <caret line="27" column="19" lean-forward="true" selection-start-line="27" selection-start-column="19" selection-end-line="27" selection-end-column="19" />
               </first_editor>
               <second_editor />
             </state>
@@ -82,15 +77,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cuda_td_3.cu">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="44" column="61" selection-start-line="44" selection-start-column="61" selection-end-line="44" selection-end-column="61" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cuda_td_4.cu">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="420">
@@ -106,19 +92,24 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cuda_td_5.cu">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="59" selection-start-line="59" selection-end-line="63" />
+            <state relative-caret-position="-45">
+              <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cuda_td_5_old.cu">
+        <entry file="file://$PROJECT_DIR$/dummy.c">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cuda_td_5_atomic.cu">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-225" />
+            <state relative-caret-position="-270" />
           </provider>
         </entry>
       </file>
@@ -145,9 +136,9 @@
         <option value="$PROJECT_DIR$/cuda_td_2.cu" />
         <option value="$PROJECT_DIR$/cuda_pattern_td_1.cu" />
         <option value="$PROJECT_DIR$/cuda_td_3.cu" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/cuda_td_4.cu" />
         <option value="$PROJECT_DIR$/cuda_td_5.cu" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -290,7 +281,7 @@
       <workItem from="1545080648674" duration="1483000" />
       <workItem from="1549563299359" duration="16433000" />
       <workItem from="1549716272841" duration="895000" />
-      <workItem from="1549717184012" duration="14545000" />
+      <workItem from="1549717184012" duration="15304000" />
     </task>
     <task id="LOCAL-00001" summary="Allocating device data">
       <created>1543912100772</created>
@@ -383,17 +374,31 @@
       <option name="project" value="LOCAL" />
       <updated>1549722513924</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="TD3 Question 5.1 ok et Question 4.1 corrigée">
+      <created>1549732068360</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1549732068360</updated>
+    </task>
+    <task id="LOCAL-00015" summary="TD3 Question 5.1 ok">
+      <created>1549732623652</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1549732623652</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="72572000" />
+    <option name="totallyTimeSpent" value="73331000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1279" y="94" width="1922" height="1053" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.28228387" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1430096" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -431,7 +436,8 @@
     <MESSAGE value="dataset" />
     <MESSAGE value="TD4 Question 1.1 ok" />
     <MESSAGE value="TD3 Question 5.1 ok et Question 4.1 corrigée" />
-    <option name="LAST_COMMIT_MESSAGE" value="TD3 Question 5.1 ok et Question 4.1 corrigée" />
+    <MESSAGE value="TD3 Question 5.1 ok" />
+    <option name="LAST_COMMIT_MESSAGE" value="TD3 Question 5.1 ok" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/dataset/images/input.ppm">
@@ -442,9 +448,6 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dummy.c">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/dataset/vector/output.raw">
@@ -468,21 +471,6 @@
         <state relative-caret-position="240">
           <caret line="16" column="17" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
         </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="435">
-            <caret line="29" column="46" selection-start-line="29" selection-start-column="46" selection-end-line="29" selection-end-column="46" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cuda_td_5_old.cu">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-225" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cuda_td_3.cu">
@@ -511,9 +499,6 @@
         <state relative-caret-position="-307" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cuda_pattern_td_2.cu">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/cuda_pattern_td_1.cu">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -528,10 +513,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/dummy.c">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cuda_td_5_atomic.cu">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-270" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/cuda_td_5.cu">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="59" selection-start-line="59" selection-end-line="63" />
+        <state relative-caret-position="-45">
+          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cuda_pattern_td_2.cu">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="404">
+            <caret line="27" column="19" lean-forward="true" selection-start-line="27" selection-start-column="19" selection-end-line="27" selection-end-column="19" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
