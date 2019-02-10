@@ -27,9 +27,9 @@ __global__ void blurringKernel(float *in, float *out, int height, int width, int
         float pixVal = 0.0;
         int blurPixelCount = 0;
 
-        for (blurRow = (-2); blurRow < 2; ++blurRow)
+        for (blurRow = -BLUR_SIZE; blurRow < BLUR_SIZE; ++blurRow)
         {
-            for (blurCol = (-2); blurCol < 2; ++blurCol)
+            for (blurCol = -BLUR_SIZE; blurCol < BLUR_SIZE; ++blurCol)
             {
                 curRow = row + blurRow;
                 curCol = col + blurCol;

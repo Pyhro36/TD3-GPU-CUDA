@@ -26,7 +26,7 @@ __global__ void colorToGrayShadesKernel(float *in, float *out, int height, int w
         float r = in[rgbIdx];
         float g = in[rgbIdx + 1];
         float b = in[rgbIdx + 2];
-        out[grayIdx] = (0.21 * r) + (0.71 * g) + (0.07 * b);
+        out[grayIdx] = (0.21f * r) + (0.71f * g) + (0.07f * b);
     }
 }
 
