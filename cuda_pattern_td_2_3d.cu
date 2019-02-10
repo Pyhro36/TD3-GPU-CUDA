@@ -1,5 +1,3 @@
-#include <cuda_runtime.h>
-#include <curand_mtgp32_kernel.h>
 #include "wb.h"
 
 #define wbCheck(stmt) \

@@ -35,7 +35,7 @@ __global__ void stencil(float *output, float *input, int width, int height, int 
     int xx = tx + (blockDim.x * blockIdx.x); // -> height
     int yy = ty + (blockDim.y * blockIdx.y); // -> width * depth
     int inXx = xx - STENCIL_EDGE;
-    int inYy = yy -
+    int inYy = yy - STENCIL_EDGE;
 
     if ((inXx < height) && ((yy / depth) < width) && ((yy % depth) < depth))
     {
