@@ -31,8 +31,16 @@ partagées a la mode des sacs de mots, mais elle est moins performante que `cuda
                                       int numARows, int numAColumns,
                                       int numBRows, int numBColumns,
                                       int numCRows, int numCColumns)`.
+                                      
+Le code peut être retrouvé sur le GitHub public : https://github.com/Pyhro36/TD3-GPU-CUDA.                                      
 
 # TD4-GPU-CUDA
 
 Le fichier `cuda_pattern_td_1.cu` contient le code pour la Question 1.1, la fonction de noyau cuda est
 `histoKernel(unsigned int *input, unsigned int *bins, int inputLength)`.
+
+Le fichier `cuda_pattern_td_2_3d.cu` contient le code pour la Question 2.1 implémenté avec une grille et des blocs 3D,
+la fonction de noyau cuda est
+`stencil(float *output, float *input, int width, int height, int depth) `. Il n'est pas fonctionnel pour le moment.
+
+Le code peut être retrouvé sur le GitHub public : https://github.com/Pyhro36/TD3-GPU-CUDA.

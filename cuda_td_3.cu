@@ -18,24 +18,20 @@
 __global__ void blurringKernel(float *in, float *out, int height, int width, int channels) {
 
     int blurRow, blurCol, curRow, curCol;
-    int row = threadIdx.x + (blockDim.x * blockIdx.x);
-    int col = threadIdx.y + (blockDim.y * blockIdx.y);
+    int col = threadIdx.x + (blockDim.x * blockIdx.x);
+    int row = threadIdx.y + (blockDim.y * blockIdx.y);
     int channel = threadIdx.z + (blockDim.z * blockIdx.z);
 
     if ((row < height) && (col < width)) {
-
         float pixVal = 0.0;
         int blurPixelCount = 0;
 
-        for (blurRow = -BLUR_SIZE; blurRow < BLUR_SIZE; ++blurRow)
-        {
-            for (blurCol = -BLUR_SIZE; blurCol < BLUR_SIZE; ++blurCol)
-            {
+        for (blurCol = -BLUR_SIZE; blurCol < BLUR_SIZE; ++blurCol) {
+            for (blurRow = -BLUR_SIZE; blurRow < BLUR_SIZE; ++blurRow) {
                 curRow = row + blurRow;
                 curCol = col + blurCol;
 
-                if ((curRow > -1) && (curRow < height) && (curCol > -1) && (curCol < width))
-                {
+                if ((curRow > -1) && (curRow < height) && (curCol > -1) && (curCol < width)) {
                     pixVal += in[(((curCol * height) + curRow) * channels) + channel];
                     blurPixelCount++;
                 }
@@ -85,7 +81,7 @@ int main(int argc, char *argv[]) {
 
     ///////////////////////////////////////////////////////
     wbTime_start(Compute, "Doing the computation on the GPU");
-    dim3 gridDim(1 + ((imageHeight - 1) / BLOCK_SIDE), 1 + ((imageWidth - 1) / BLOCK_SIDE), imageChannels);
+    dim3 gridDim(1 + ((imageWidth - 1) / BLOCK_SIDE), 1 + ((imageHeight - 1) / BLOCK_SIDE), imageChannels);
     dim3 blockDim(BLOCK_SIDE, BLOCK_SIDE, 1); // le but est d'avoir toujours des blocks de 16 * 16
     blurringKernel<<<gridDim, blockDim>>>(deviceInputImageData,
             deviceOutputImageData, imageHeight, imageWidth, imageChannels);
@@ -103,13 +99,12 @@ int main(int argc, char *argv[]) {
     int row, col, channel;
     FILE *fp = fopen("first.ppm", "wb"); /* b - binary mode */
     (void) fprintf(fp, "P6\n%d %d\n255\n", imageWidth, imageHeight);
-    for (col = 0; col < imageWidth; ++col)
-    {
-        for (row = 0; row < imageHeight; ++row)
-        {
+
+    for (col = 0; col < imageWidth; ++col) {
+        for (row = 0; row < imageHeight; ++row) {
             static unsigned char color[3];
-            for (channel = 0; channel < imageChannels; ++channel)
-            {
+
+            for (channel = 0; channel < imageChannels; ++channel) {
                 color[channel] = (unsigned char)(hostOutputImageData[(((col * imageHeight) + row) * imageChannels) + channel]
                         * 255.0f);
             }

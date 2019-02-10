@@ -12,63 +12,113 @@
  } \
  } while (0)
 
-#define I_TILE_HEIGHT 16
-#define I_TILE_WIDTH 4
+#define I_TILE_WIDTH 16
+#define I_TILE_HEIGHT 4
 #define I_TILE_DEPTH 4
 
+#define STENCIL_LENGTH 3
 #define STENCIL_ADD_BY_AXE 2
-#define STENCIL_EDGE ( STENCIL_ADD_BY_AXE / 2 )
+#define STENCIL_EDGE 1
 
 #define O_TILE_HEIGHT ( I_TILE_HEIGHT - STENCIL_ADD_BY_AXE )
 #define O_TILE_WIDTH ( I_TILE_WIDTH - STENCIL_ADD_BY_AXE )
 #define O_TILE_DEPTH ( I_TILE_DEPTH - STENCIL_ADD_BY_AXE )
 
-typedef int i1;
 __global__ void stencil(float *output, float *input, int width, int height, int depth) {
 
     //@@ INSERT CODE HERE
-    __shared__ float privateInput[I_TILE_HEIGHT * I_TILE_WIDTH * I_TILE_DEPTH];
+    float res;
+
+    __shared__ float privateInput[I_TILE_WIDTH * I_TILE_HEIGHT * I_TILE_DEPTH];
+
+//    float mask[STENCIL_LENGTH][STENCIL_LENGTH][STENCIL_LENGTH] {
+//        {
+//            { 1.0f, 1.0f, 1.0f },
+//            { 1.0f, 1.0f, 1.0f },
+//            { 1.0f, 1.0f, 1.0f }
+//        }, {
+//            { 1.0f, 1.0f, 1.0f },
+//            { 1.0f, -6.0f, 1.0f },
+//            { 1.0f, 1.0f, 1.0f }
+//        }, {
+//            { 1.0f, 1.0f, 1.0f },
+//            { 1.0f, 1.0f, 1.0f },
+//            { 1.0f, 1.0f, 1.0f }
+//        }
+//    };
 
     int tx = threadIdx.x;
     int ty = threadIdx.y;
     int tz = threadIdx.z;
-    int outRow = tx + (O_TILE_HEIGHT * blockIdx.x);
+    int outCol = tx + (O_TILE_WIDTH * blockIdx.x);
+    int outRow = ty + (O_TILE_HEIGHT * blockIdx.y);
     int outChannel = tz + (O_TILE_DEPTH * blockIdx.z);
-    int inRow = outRow - STENCIL_EDGE;
-    int inCol = outCol - STENCIL_EDGE;
-    int inChannel = outChannel - STENCIL_EDGE;
+    int inCol = outCol - 1;
+    int inRow = outRow - 1;
+    int inChannel = outChannel - 1;
 
-    if ((inRow >= 0) && (inRow < height) && (inCol >= 0) && (inCol < width) && (inChannel >= 0) && (inChannel < depth))
+    if ((inCol >= 0) && (inCol < width) && (inRow >= 0) && (inRow < height) && (inChannel >= 0) && (inChannel < depth))
     {
-        privateInput[((tx  + (ty * I_TILE_HEIGHT)) * I_TILE_DEPTH) + tz] =
+        privateInput[(((tx * I_TILE_HEIGHT) + ty) * I_TILE_DEPTH) + tz] =
                 input[(((inCol * height) + inRow) * depth) + inChannel];
     }
     else
     {
-        privateInput[((tx + (ty * I_TILE_HEIGHT)) * I_TILE_DEPTH) + tz] = 0.0f;
+        privateInput[(((tx * I_TILE_HEIGHT) + ty) * I_TILE_DEPTH) + tz] = 0.0f;
     }
-    // comme on ne se soucie pas des bornes, on utilise pas les valeurs en dehors de height et width de privateInput
 
-    if ((outRow < height) && (outCol < width) && (outChannel < depth)
-    && (tx < O_TILE_HEIGHT) && (ty < O_TILE_WIDTH) && (tz < O_TILE_DEPTH))
+    res = 0.0f;
+
+    __syncthreads();
+
+    if ((tx < O_TILE_WIDTH) && (ty < O_TILE_HEIGHT) && (tz < O_TILE_DEPTH))
     {
-        output[((outRow + (outCol * height)) * depth) + outChannel] =
-                privateInput[((tx + 1 + ((ty + 1) * I_TILE_HEIGHT)) * I_TILE_DEPTH) + tz + 2]           // [i,j,k+1]
-              + privateInput[(((tx + 1) + ((ty + 1) * I_TILE_HEIGHT)) * I_TILE_DEPTH) + tz]             // [i,j,k-1]
-              + privateInput[((tx + 1 + ((ty + 2) * I_TILE_HEIGHT)) * I_TILE_DEPTH) + tz]               // [i,j+1,k]
-              + privateInput[((tx + 1 + (ty * I_TILE_DEPTH)) * I_TILE_HEIGHT) + tz + 1]                 // [i,j-1,k]
-              + privateInput[(((tx + 2) + ((ty + 1) * I_TILE_HEIGHT)) * I_TILE_DEPTH) + tz + 1]         // [i+1,j,k]
-              + privateInput[((tx + ((ty + 1) * I_TILE_HEIGHT)) * I_TILE_DEPTH) + tz + 1]               // [i-1,j,k]
-              - (6 * privateInput[((tx + 1 + ((ty + 1) * I_TILE_HEIGHT)) * I_TILE_DEPTH) + tz + 1]);    // [i,j,k]
+         res =  privateInput[((((tx + 1) * I_TILE_HEIGHT) + ty + 1) * I_TILE_DEPTH) + tz + 2]           // [i,j,k+1]
+              + privateInput[((((tx + 1) * I_TILE_HEIGHT) + ty + 1) * I_TILE_DEPTH) + tz]               // [i,j,k-1]
+              + privateInput[((((tx + 1) * I_TILE_HEIGHT) + ty + 2) * I_TILE_DEPTH) + tz + 1]           // [i,j+1,k]
+              + privateInput[((((tx + 1) * I_TILE_HEIGHT) + ty) * I_TILE_DEPTH) + tz + 1]               // [i,j-1,k]
+              + privateInput[((((tx + 2) * I_TILE_HEIGHT) + ty + 1) * I_TILE_DEPTH) + tz + 1]           // [i+1,j,k]
+              + privateInput[(((tx * I_TILE_HEIGHT) + ty + 1) * I_TILE_DEPTH) + tz + 1]                 // [i-1,j,k]
+              - (6.0f * privateInput[((((tx + 1) * I_TILE_HEIGHT) + ty + 1) * I_TILE_DEPTH) + tz + 1]);    // [i,j,k]
+//        for (int i = 0; i < STENCIL_LENGTH; ++i) {
+//            for (int j = 0; j < STENCIL_LENGTH; ++j) {
+//                for (int k = 0; k < STENCIL_LENGTH; ++k) {
+//                    res += mask[i][j][k] *
+//                            privateInput[((((tx + i) * I_TILE_HEIGHT) + ty + j) * I_TILE_DEPTH) + tz + k];
+//                }
+//            }
+//        }
+    }
+    else
+    {
+        res = 0.0f;
+    }
+
+    __syncthreads();
+
+    if ((outCol < width) && (outRow < height) && (outChannel < depth))
+    {
+        if (res > 255.0f)
+        {
+            output[(((outCol * height) + outRow) * depth) + outChannel] = 1.0f;
+        }
+        else if (res < 0.0f)
+        {
+            output[(((outCol * height) + outRow) * depth) + outChannel] = 0.0f;
+        }
+        else
+        {
+            output[(((outCol * height) + outRow) * depth) + outChannel] = res;
+        }
     }
 }
 
 static void launch_stencil(float *deviceOutputData, float *deviceInputData, int width, int height, int depth) {
 
     //@@ INSERT CODE HERE
-    dim3 gridDim(1 + ((height - 1) / O_TILE_HEIGHT),
-            (1 + ((width - 1) / O_TILE_WIDTH)), (1 + ((depth - 1) / O_TILE_DEPTH)));
-    dim3 blockDim(I_TILE_HEIGHT, I_TILE_WIDTH, I_TILE_DEPTH);
+    dim3 gridDim(1 + ((width - 1) / O_TILE_WIDTH),
+            1 + ((height - 1) / O_TILE_HEIGHT), (1 + ((depth - 1) / O_TILE_DEPTH)));
+    dim3 blockDim(I_TILE_WIDTH, I_TILE_HEIGHT, I_TILE_DEPTH);
     stencil<<<gridDim, blockDim>>>(deviceOutputData, deviceInputData, width, height, depth);
     cudaDeviceSynchronize();
 }

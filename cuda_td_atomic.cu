@@ -25,11 +25,9 @@ __global__ void matrixMultiplyShared(float *A, float *B, float *C,
     int rowC = threadIdx.y + (blockDim.y * blockIdx.y);
     int colC = threadIdx.z + (blockDim.z * blockIdx.z);
 
-    if ((rowC < numCRows) && (colC < numCColumns))
-    {
+    if ((rowC < numCRows) && (colC < numCColumns)) {
         // initialisation de la somme privee et de C
-        if (threadIdx.x == 0)
-        {
+        if (threadIdx.x == 0) {
             C[(rowC * numCColumns) + colC] = 0;
             privateSum = 0;
         }
@@ -39,8 +37,7 @@ __global__ void matrixMultiplyShared(float *A, float *B, float *C,
         __syncthreads();
 
         // reduction de la somme privee
-        if (threadIdx.x == 0)
-        {
+        if (threadIdx.x == 0) {
             atomicAdd(&(C[(rowC * numCColumns) + colC]), privateSum);
         }
     }

@@ -31,34 +31,28 @@ __global__ void matrixMultiplyShared(float *A, float *B, float *C,
     int rowC = tx + (blockDim.x * blockIdx.x);
     int colC = ty + (blockDim.y * blockIdx.y);
 
-    if ((rowC < numCRows) && (colC < numCColumns))
-    {
+    if ((rowC < numCRows) && (colC < numCColumns)) {
         cValue = 0;
 
-        for (tile = 0; tile < (1 + ((numAColumns - 1) / BLOCK_SIDE)); ++tile)
-        {
-            if (((tile * BLOCK_SIDE) + tx) < numAColumns)
-            {
+        for (tile = 0; tile < (1 + ((numAColumns - 1) / BLOCK_SIDE)); ++tile) {
+
+            if (((tile * BLOCK_SIDE) + tx) < numAColumns) {
                 privateA[(tx * BLOCK_SIDE) + ty] = A[(rowC * numAColumns) + (tile * BLOCK_SIDE) + ty];
-            }
-            else
-            {
+
+            } else {
                 privateA[(tx * BLOCK_SIDE) + ty] = 0.0f;
             }
 
-            if (((tile * BLOCK_SIDE) + ty) < numBRows)
-            {
+            if (((tile * BLOCK_SIDE) + ty) < numBRows) {
                 privateB[(tx * BLOCK_SIDE) + ty] = B[(((tile * BLOCK_SIDE) + tx) * numBColumns) + colC];
-            }
-            else
-            {
+
+            } else {
                 privateB[(tx * BLOCK_SIDE) + ty] = 0.0f;
             }
 
             __syncthreads();
 
-            for (i = 0; i < BLOCK_SIDE; ++i)
-            {
+            for (i = 0; i < BLOCK_SIDE; ++i) {
                 cValue += privateA[(tx * BLOCK_SIDE) + i] * privateB[(i * BLOCK_SIDE) + ty];
             }
 

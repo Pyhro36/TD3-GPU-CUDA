@@ -24,12 +24,10 @@ __global__ void matrixMultiply(float *A, float *B, float *C, int numARows,
     int rowC = threadIdx.x + (blockDim.x * blockIdx.x);
     int colC = threadIdx.y + (blockDim.y * blockIdx.y);
 
-    if ((rowC < numCRows) && (colC < numCColumns))
-    {
+    if ((rowC < numCRows) && (colC < numCColumns)) {
         cValue = 0;
 
-        for (colA = 0; colA < numAColumns; ++colA)
-        {
+        for (colA = 0; colA < numAColumns; ++colA) {
             cValue += A[(rowC * numAColumns) + colA] * B[(colA * numBColumns) + colC];
         }
 
