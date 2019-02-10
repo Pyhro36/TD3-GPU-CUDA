@@ -10,26 +10,27 @@
     } \
 } while (0)
 
-#define BLUR_SIZE 2
+#define BLUR_SIZE 5
 
 //@@ INSERT CODE HERE
 #define BLOCK_SIDE 16
 
 __global__ void blurringKernel(float *in, float *out, int height, int width, int channels) {
 
-    int blurRow, blurCol, curRow, curCol;
+    float pixVal;
+    int blurRow, blurCol, curRow, curCol, blurPixelCount;
     int col = threadIdx.x + (blockDim.x * blockIdx.x);
     int row = threadIdx.y + (blockDim.y * blockIdx.y);
     int channel = threadIdx.z + (blockDim.z * blockIdx.z);
 
-    if ((row < height) && (col < width)) {
-        float pixVal = 0.0;
-        int blurPixelCount = 0;
+    if ((row < height) && (col < width) && (channel < channels)) {
+        pixVal = 0.0;
+        blurPixelCount = 0;
 
-        for (blurCol = -BLUR_SIZE; blurCol < BLUR_SIZE; ++blurCol) {
-            for (blurRow = -BLUR_SIZE; blurRow < BLUR_SIZE; ++blurRow) {
-                curRow = row + blurRow;
+        for (blurCol = -BLUR_SIZE; blurCol < BLUR_SIZE + 1; blurCol++) {
+            for (blurRow = -BLUR_SIZE; blurRow < BLUR_SIZE + 1; blurRow++) {
                 curCol = col + blurCol;
+                curRow = row + blurRow;
 
                 if ((curRow > -1) && (curRow < height) && (curCol > -1) && (curCol < width)) {
                     pixVal += in[(((curCol * height) + curRow) * channels) + channel];

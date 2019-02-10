@@ -20,9 +20,9 @@
 #define STENCIL_ADD_BY_AXE 2
 #define STENCIL_EDGE 1
 
-#define O_TILE_HEIGHT ( I_TILE_HEIGHT - STENCIL_ADD_BY_AXE )
-#define O_TILE_WIDTH ( I_TILE_WIDTH - STENCIL_ADD_BY_AXE )
-#define O_TILE_DEPTH ( I_TILE_DEPTH - STENCIL_ADD_BY_AXE )
+#define O_TILE_HEIGHT 14 //( I_TILE_HEIGHT - STENCIL_ADD_BY_AXE )
+#define O_TILE_WIDTH 2 // ( I_TILE_WIDTH - STENCIL_ADD_BY_AXE )
+#define O_TILE_DEPTH 2 //( I_TILE_DEPTH - STENCIL_ADD_BY_AXE )
 
 __global__ void stencil(float *output, float *input, int width, int height, int depth) {
 
@@ -31,19 +31,19 @@ __global__ void stencil(float *output, float *input, int width, int height, int 
 
     __shared__ float privateInput[I_TILE_WIDTH * I_TILE_HEIGHT * I_TILE_DEPTH];
 
-//    float mask[STENCIL_LENGTH][STENCIL_LENGTH][STENCIL_LENGTH] {
+//    __restrict_arr const float mask[STENCIL_LENGTH][STENCIL_LENGTH][STENCIL_LENGTH] {
 //        {
-//            { 1.0f, 1.0f, 1.0f },
-//            { 1.0f, 1.0f, 1.0f },
-//            { 1.0f, 1.0f, 1.0f }
+//            { 0.0f, 0.0f, 0.0f },
+//            { 0.0f, 1.0f, 0.0f },
+//            { 0.0f, 0.0f, 0.0f }
 //        }, {
-//            { 1.0f, 1.0f, 1.0f },
+//            { 0.0f, 1.0f, 0.0f },
 //            { 1.0f, -6.0f, 1.0f },
-//            { 1.0f, 1.0f, 1.0f }
+//            { 0.0f, 1.0f, 0.0f }
 //        }, {
-//            { 1.0f, 1.0f, 1.0f },
-//            { 1.0f, 1.0f, 1.0f },
-//            { 1.0f, 1.0f, 1.0f }
+//            { 0.0f, 0.0f, 0.0f },
+//            { 0.0f, 1.0f, 1.0f },
+//            { 0.0f, 0.0f, 0.0f }
 //        }
 //    };
 
@@ -57,29 +57,30 @@ __global__ void stencil(float *output, float *input, int width, int height, int 
     int inRow = outRow - 1;
     int inChannel = outChannel - 1;
 
-    if ((inCol >= 0) && (inCol < width) && (inRow >= 0) && (inRow < height) && (inChannel >= 0) && (inChannel < depth))
-    {
+    if ((inCol > -1)
+    && (inCol < width)
+    && (inRow > -1)
+    && (inRow < height)
+    && (inChannel > -1)
+    && (inChannel < depth)) {
         privateInput[(((tx * I_TILE_HEIGHT) + ty) * I_TILE_DEPTH) + tz] =
                 input[(((inCol * height) + inRow) * depth) + inChannel];
-    }
-    else
-    {
+    } else {
         privateInput[(((tx * I_TILE_HEIGHT) + ty) * I_TILE_DEPTH) + tz] = 0.0f;
     }
 
-    res = 0.0f;
+//    res = 0.0f;
 
     __syncthreads();
 
-    if ((tx < O_TILE_WIDTH) && (ty < O_TILE_HEIGHT) && (tz < O_TILE_DEPTH))
-    {
+    if ((tx < O_TILE_WIDTH) && (ty < O_TILE_HEIGHT) && (tz < O_TILE_DEPTH)) {
          res =  privateInput[((((tx + 1) * I_TILE_HEIGHT) + ty + 1) * I_TILE_DEPTH) + tz + 2]           // [i,j,k+1]
               + privateInput[((((tx + 1) * I_TILE_HEIGHT) + ty + 1) * I_TILE_DEPTH) + tz]               // [i,j,k-1]
               + privateInput[((((tx + 1) * I_TILE_HEIGHT) + ty + 2) * I_TILE_DEPTH) + tz + 1]           // [i,j+1,k]
               + privateInput[((((tx + 1) * I_TILE_HEIGHT) + ty) * I_TILE_DEPTH) + tz + 1]               // [i,j-1,k]
               + privateInput[((((tx + 2) * I_TILE_HEIGHT) + ty + 1) * I_TILE_DEPTH) + tz + 1]           // [i+1,j,k]
               + privateInput[(((tx * I_TILE_HEIGHT) + ty + 1) * I_TILE_DEPTH) + tz + 1]                 // [i-1,j,k]
-              - (6.0f * privateInput[((((tx + 1) * I_TILE_HEIGHT) + ty + 1) * I_TILE_DEPTH) + tz + 1]);    // [i,j,k]
+              - (6.0f * privateInput[((((tx + 1) * I_TILE_HEIGHT) + ty + 1) * I_TILE_DEPTH) + tz + 1]); // [i,j,k]
 //        for (int i = 0; i < STENCIL_LENGTH; ++i) {
 //            for (int j = 0; j < STENCIL_LENGTH; ++j) {
 //                for (int k = 0; k < STENCIL_LENGTH; ++k) {
@@ -88,26 +89,19 @@ __global__ void stencil(float *output, float *input, int width, int height, int 
 //                }
 //            }
 //        }
-    }
-    else
-    {
+    } else {
         res = 0.0f;
     }
 
-    __syncthreads();
+    if ((outCol < width) && (outRow < height) && (outChannel < depth)) {
 
-    if ((outCol < width) && (outRow < height) && (outChannel < depth))
-    {
-        if (res > 255.0f)
-        {
+        if (res > 255.0f) {
             output[(((outCol * height) + outRow) * depth) + outChannel] = 1.0f;
-        }
-        else if (res < 0.0f)
-        {
+
+        } else if (res < 0.0f) {
             output[(((outCol * height) + outRow) * depth) + outChannel] = 0.0f;
-        }
-        else
-        {
+
+        } else {
             output[(((outCol * height) + outRow) * depth) + outChannel] = res;
         }
     }
