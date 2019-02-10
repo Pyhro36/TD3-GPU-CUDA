@@ -48,6 +48,6 @@ la fonction de noyau cuda est
 
 Le fichier `cuda_pattern_td_3` contient le code pour la Question 3.1, la fonction de noyau cuda est
 `total(float *input, float *output, int len)`. Il est fonctionnel d'après les exemples générés par le script
-`generate_vector_float.sh`. 
+`generate_vector_float.sh`, modifié pour donner la somme des termes du vecteur généré. 
 
 Le code peut être retrouvé sur le GitHub public : https://github.com/Pyhro36/TD3-GPU-CUDA.
