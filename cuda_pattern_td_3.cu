@@ -1,8 +1,5 @@
 // Given a list (lst) of length n
 // Output its sum = lst[0] + lst[1] + ... + lst[n-1];
-#include <driver_types.h>
-#include <cuda_runtime.h>
-#include <curand_mtgp32_kernel.h>
 #include "wb.h"
 #define BLOCK_SIZE 512 //@@ You can change this
 
